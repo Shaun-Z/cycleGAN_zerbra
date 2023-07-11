@@ -469,12 +469,12 @@ Todo and summary:
     \end{itemize}
   \end{itemize}
 
-  \begin{quote}
-  Cross-entropy is a mathematical measure of the dissimilarity between
-  two probability distributions. In the context of GANs, it is used to
-  quantify the discrepancy between the probability distributions of real
-  and generated data.
-  \end{quote}
+The basic idea of Cycle Consistency is to learn simultaneously the mapping from distribution X to Y and from Y to X in a generative model, given two different data distributions X and Y. This is achieved by enforcing a bi-directional consistency constraint. It means that for any sample x from X, mapping it to Y space and then back to X space should preserve the similarity to the original sample x. Similarly, for any sample y from Y, mapping it to X space and then back to Y space should preserve the similarity to the original sample y.
+
+Through this adversarial training, the generator can learn to generate high-quality synthetic samples.
+
+\[\mathcal{L}_{\text{cyc}}(G,F)=\mathbb{E}_{x\sim p_{\text{data}}(x)}[\left\|F(G(x))-x\right\|_1]+\mathbb{E}_{y\sim p_{\text{data}}(y)}[\left\|G(F(x))-y\right\|_1]\]
+
 \item
   Now that L\_GAN and L\_cyc are available, there are still some
   problems with the performance of the network. Forget the Identity loss
