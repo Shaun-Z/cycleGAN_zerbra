@@ -398,4 +398,92 @@ discriminator separately and sum up the two loss functions represented
 by L2. We record the loss sum and update the weight of the discriminator
 using Adam SGD.
 
+\newpage
+
+Todo and summary:
+
+\begin{figure}
+\centering
+\includegraphics{./assets/GAN.png}
+\caption{}
+\end{figure}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Which is the subject of the Adversarial Loss function expression
+  L\_GAN? Which is the accompaniment?
+
+  \[\mathcal{L}_{\text{GAN}}(G,D_Y,X,Y)=\mathbb{E}_{y\sim p_{\text{data}}(y)}[\log{D_y(y)}]+\mathbb{E}_{x\sim p_{\text{data}}(x)}[\log{(1-D_y(G(x)))}]\]
+
+  In the above equation, we notice that during the training of the
+  \textbf{discriminator (D)} focuses on maximizing the \(\log{D_y(y)}\),
+  which means achieving the correct label during the classification of
+  \(y\) and maximizing the \(\log{(1-D_y(G(x)))}\), which means trying
+  to identify the fake image. The \textbf{generator (G)} focuses on
+  minimizing \(\log{(1-D_y(G(x)))}\), and cannot directly influence
+  \(\log{D_y(y)}\). So the term
+  \(\mathbb{E}_{x\sim p_{\text{data}}(x)}[\log{(1-D_y(G(x)))}]\) is the
+  subject.
+
+  \begin{quote}
+  The above minimax loss function can cause the GAN to get stuck in the
+  early stages of GAN training when the discriminator's job is very
+  easy. It is suggested to modify the generator loss so that the
+  generator tries to maximize \(\log D(G(z))\).
+  \end{quote}
+\item
+  Decompose the process of L\_GAN. What is the relationship between
+  L\_cyc and L\_GAN ?
+
+  \begin{itemize}
+  \item
+    The generator's objective is to fool the discriminator, another
+    component of the GAN, into classifying its generated samples as
+    real. The generator loss measures the dissimilarity between the
+    predicted probability by the discriminator for the generated data
+    and the desired label of "real" (1).
+
+    \[\text{Generator Loss: } \mathcal{L}_G = \frac{1}{n}\cdot\sum_i^n \log{(1-D(G(x)))}\]
+  \item
+    While the discriminator is trained, it classifies both the real data
+    and the fake data from the generator.
+
+    \[\text{Discriminator Loss: } \mathcal{L}_D= -\log(D(y)) - \log(1 - D(G(x)))\]
+
+    \begin{itemize}
+    \item
+      The first cross-entropy term, \(-\log(D(y))\), measures the
+      difference between the discriminator's probability of classifying
+      real samples \(y\) as real and the true labels. \uline{This
+      cross-entropy term encourages the discriminator to correctly
+      categorize the true sample as true.}
+    \item
+      The second cross-entropy term \(-\log(1 - D(G(x)))\) is the
+      cross-entropy for the generated sample \(G(x)\). It measures the
+      difference between the probability that the discriminator
+      classifies the generated sample \(G(x)\) as a true sample and the
+      generated sample label (i.e., not present). This cross-entropy
+      term encourages the discriminator to correctly categorize
+      generated samples as generated samples (i.e., false samples).
+    \end{itemize}
+  \end{itemize}
+
+  \begin{quote}
+  Cross-entropy is a mathematical measure of the dissimilarity between
+  two probability distributions. In the context of GANs, it is used to
+  quantify the discrepancy between the probability distributions of real
+  and generated data.
+  \end{quote}
+\item
+  Now that L\_GAN and L\_cyc are available, there are still some
+  problems with the performance of the network. Forget the Identity loss
+  in the article, how do I modify this current loss function?
+\item
+  Figure out the Identity loss.
+\item
+  Feed some special images to the model and debug the value of each loss
+  function. Try to find abnormal values.
+\end{enumerate}
+
 \end{document}
