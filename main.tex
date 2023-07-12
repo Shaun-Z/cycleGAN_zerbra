@@ -481,6 +481,13 @@ Through this adversarial training, the generator can learn to generate high-qual
   in the article, how do I modify this current loss function?
 \item
   Figure out the Identity loss.
+  
+\[\mathcal{L}_{\text{identity}}(G,F)=\mathbb{E}_{y\sim p_{\text{data}}(y)}[\left\|G(y)-y\right\|_1]+\mathbb{E}_{x\sim p_{\text{data}}(x)}[\left\|F(x)-x\right\|_1]\]
+
+Identity loss is a loss function used in training generative models. It is commonly employed in tasks such as face recognition, pose estimation, etc., with the aim of ensuring that the generated outputs have the same identity information as the inputs.
+
+In Identity loss, the objective of the generator is to produce outputs that are similar to the inputs, thereby maintaining consistency in identity information. To achieve this, a distance metric is often used to measure the difference between the generated results and the inputs, such as Euclidean distance or cosine similarity. The loss function of Identity loss minimizes this difference, striving to make the generated results as consistent as possible with the inputs.
+
 \item
   Feed some special images to the model and debug the value of each loss
   function. Try to find abnormal values.
