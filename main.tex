@@ -4,6 +4,7 @@
 %
 \documentclass[
 ]{article}
+\usepackage{listings}
 \usepackage{amsmath,amssymb}
 \usepackage{lmodern}
 \usepackage{iftex}
@@ -344,7 +345,7 @@ translated samples \(G(X)\) and real samples \(y\).
 \subsubsection{Forward cycle
 consistency}\label{forward-cycle-consistency}}
 
-\[\mathcal{L}_{\text{cyc}}(G,F)=\mathbb{E}_{x\sim p_{\text{data}}(x)}[\left\|F(G(x))-x\right\|_1]+\mathbb{E}_{y\sim p_{\text{data}}(y)}[\left\|G(F(x))-y\right\|_1]\]
+\[\mathcal{L}_{\text{cyc}}(G,F)=\mathbb{E}_{x\sim p_{\text{data}}(x)}[\left\|F(G(x))-x\right\|_1]+\mathbb{E}_{y\sim p_{\text{data}}(y)}[\left\|G(F(y))-y\right\|_1]\]
 
 Functions should be cycle-consistent: for each image \(x\) from domain
 \(X\), the image translation cycle should be able to bring \(x\) back to
@@ -492,5 +493,30 @@ In Identity loss, the objective of the generator is to produce outputs that are 
   Feed some special images to the model and debug the value of each loss
   function. Try to find abnormal values.
 \end{enumerate}
+
+\hypertarget{code-analysis}{%
+\section{Code analysis}\label{code-analysis}}
+
+\begin{lstlisting}[language=Python]
+self.criterionGAN = networks.GANLoss(opt.gan_mode).to(self.device)
+self.criterionCycle = torch.nn.L1Loss()
+self.criterionIdt = torch.nn.L1Loss()
+\end{lstlisting}
+
+\begin{itemize}
+  \item self.criterionGAN is a GAN loss function, used to train the generator and discriminator during training.
+  
+  \item self.criterionCycle is a L1 loss function:\[\mathcal{L}_{\text{cyc}}(G,F)=\mathbb{E}_{x\sim p_{\text{data}}(x)}[\left\|F(G(x))-x\right\|_1]+\mathbb{E}_{y\sim p_{\text{data}}(y)}[\left\|G(F(y))-y\right\|_1]\]
+  
+  \item self.criterionIdt is the Identity loss:\[\mathcal{L}_{\text{identity}}(G,F)=\mathbb{E}_{y\sim p_{\text{data}}(y)}[\left\|G(y)-y\right\|_1]+\mathbb{E}_{x\sim p_{\text{data}}(x)}[\left\|F(x)-x\right\|_1]\]
+  
+\end{itemize}
+
+Loss during training process(To be continued):
+\begin{figure}
+\centering
+\includegraphics{./assets/Loss_over_time.png}
+\caption{Loss over time}
+\end{figure}
 
 \end{document}
